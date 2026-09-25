@@ -1,28 +1,31 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-规则冲突校验器 —— 保证「用户规则优先、补充规则不冲突」。
+规则冲突校验器（多版本） —— 保证「自定义规则在最前方、优先匹配」。
 
-检查项：
-  [1] overseas.list 的规则行是否以 user-rules/base.list 逐字开头（用户规则未被改动且在最前）
-  [2] 补充规则是否被用户规则完整覆盖（死规则）
-  [3] 补充规则是否被用户的 DOMAIN-KEYWORD 吞掉
+每个版本目录（domestic / overseas）下的结构：
+    <version>/custom.list      自定义规则（权威副本，必须位于最前）
+    <version>/supplement.list  补充规则（追加在后）
+    <version>/<version>.list   合并产物（custom 在前 + supplement 在后，带注释）
+    <version>/<version>.yaml   rule-provider 订阅格式（payload 与 .list 规则行一致）
+
+检查项（对每个版本）：
+  [1] 合并文件的规则行是否逐字以 custom.list 开头（自定义规则未被改动且在最前）
+  [2] 补充规则是否被自定义规则完整覆盖（死规则）
+  [3] 补充规则是否被自定义的 DOMAIN-KEYWORD 吞掉
   [4] 补充规则内部是否重复 / 被前一条完整覆盖
-  [5] 补充规则与用户规则是否存在「域集相交且策略不同」（策略不同只允许靠顺序兜底，
-      这里只报告不判失败，因为用户规则在前必然优先生效）
-  [6] overseas.yaml 的 payload 是否与 overseas.list 的规则行完全一致
+  [5] 补充规则与自定义规则是否存在「域集相交且策略不同」
+  [6] yaml payload 是否与合并 .list 的规则行完全一致
 
-用法：python3 scripts/check_rules.py    退出码 0 = 全部通过
+用法：python3 scripts/check_rules.py [version ...]   默认检查全部版本
+      退出码 0 = 全部通过
 """
 import os
 import sys
 from collections import Counter
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-BASE_LIST = os.path.join(ROOT, "user-rules", "base.list")
-OVER_LIST = os.path.join(ROOT, "overseas", "overseas.list")
-OVER_YAML = os.path.join(ROOT, "overseas", "overseas.yaml")
-
+VERSIONS = ["domestic", "overseas"]
 VALID_TYPES = {"DOMAIN", "DOMAIN-SUFFIX", "DOMAIN-KEYWORD"}
 
 
@@ -98,49 +101,65 @@ def fmt(r):
     return "%s,%s,%s" % r
 
 
-def main():
-    base = load_rules(BASE_LIST)
-    over = load_rules(OVER_LIST)
+def check(version):
+    vdir = os.path.join(ROOT, version)
+    custom_p = os.path.join(vdir, "custom.list")
+    supp_p = os.path.join(vdir, "supplement.list")
+    merged_p = os.path.join(vdir, "%s.list" % version)
+    yaml_p = os.path.join(vdir, "%s.yaml" % version)
+
+    print("=" * 66)
+    print("版本：%s" % version)
+    print("=" * 66)
     fails = []
 
-    # ---- [1] 用户规则必须逐字处于最前 ----
-    if over[:len(base)] != base:
-        fails.append("[1] overseas.list 开头与 user-rules/base.list 不一致"
-                     "（用户规则被改动或不在最前）")
-    n_user, n_sup = len(base), len(over) - len(base)
-    sup = over[len(base):]
-    print("[1] 用户规则前缀逐字一致 .................... %s (%d 条)" % ("PASS" if not fails else "FAIL", n_user))
-    print("    补充规则 ................................ %d 条" % n_sup)
+    for p in (custom_p, supp_p, merged_p, yaml_p):
+        if not os.path.exists(p):
+            print("✗ 缺少文件: %s" % os.path.relpath(p, ROOT))
+            return ["[%s] 缺少 %s" % (version, os.path.basename(p))]
+
+    custom = load_rules(custom_p)
+    supp = load_rules(supp_p)
+    merged = load_rules(merged_p)
+
+    # ---- [1] 自定义规则必须逐字处于最前 ----
+    ok1 = merged[:len(custom)] == custom and len(merged) == len(custom) + len(supp)
+    if not ok1:
+        fails.append("[1] %s.list 开头与 custom.list 不一致（自定义规则被改动或不在最前）" % version)
+    print("[1] 自定义规则逐字位于最前 .................. %s (%d 条)"
+          % ("PASS" if ok1 else "FAIL", len(custom)))
+    print("    补充规则 ................................ %d 条" % len(supp))
 
     # ---- [2] 死规则 ----
-    dead = [(s, [u for u in base if covers(u, s)]) for s in sup]
+    dead = [(s, [u for u in custom if covers(u, s)]) for s in supp]
     dead = [(s, h) for s, h in dead if h]
     for s, h in dead:
         print("    ✗ 死规则 %s  <= 已被 %s 完整覆盖" % (fmt(s), fmt(h[0])))
-    print("[2] 无被用户规则完整覆盖的死规则 ............ %s" % ("PASS" if not dead else "FAIL (%d)" % len(dead)))
+    print("[2] 无被自定义规则完整覆盖的死规则 ......... %s"
+          % ("PASS" if not dead else "FAIL (%d)" % len(dead)))
     if dead:
         fails.append("[2] %d 条死规则" % len(dead))
 
-    # ---- [3] 被用户关键字吞掉 ----
-    kw = [u for u in base if u[0] == "DOMAIN-KEYWORD"]
-    swallowed = [s for s in sup if any(k[1] in s[1] for k in kw)]
+    # ---- [3] 被自定义关键字吞掉 ----
+    kw = [u for u in custom if u[0] == "DOMAIN-KEYWORD"]
+    swallowed = [s for s in supp if any(k[1] in s[1] for k in kw)]
     for s in swallowed:
-        print("    ✗ %s  <= 被用户 DOMAIN-KEYWORD 吞掉" % fmt(s))
-    print("[3] 无补充规则被用户关键字吞掉 .............. %s" % ("PASS" if not swallowed else "FAIL (%d)" % len(swallowed)))
+        print("    ✗ %s  <= 被自定义 DOMAIN-KEYWORD 吞掉" % fmt(s))
+    print("[3] 无补充规则被自定义关键字吞掉 ........... %s"
+          % ("PASS" if not swallowed else "FAIL (%d)" % len(swallowed)))
     if swallowed:
         fails.append("[3] %d 条被关键字吞掉" % len(swallowed))
 
-    # ---- [4] 补充规则内部重复 / 自覆盖 ----
-    seen = {}
-    dup = []
-    for s in sup:
+    # ---- [4] 内部重复 / 自覆盖 ----
+    seen, dup = {}, []
+    for s in supp:
         k = (s[0], s[1])
         if k in seen:
             dup.append(s)
         seen[k] = True
     self_shadow = []
-    for i, s in enumerate(sup):
-        for e in sup[:i]:
+    for i, s in enumerate(supp):
+        for e in supp[:i]:
             if covers(e, s):
                 self_shadow.append((s, e))
     for s in dup:
@@ -150,52 +169,55 @@ def main():
     ok4 = not dup and not self_shadow
     print("[4] 补充规则内部无重复/无自覆盖 ............ %s" % ("PASS" if ok4 else "FAIL"))
     if not ok4:
-        fails.append("[4] 内部重复 %d / 自覆盖 %d" % (len(dup), len(self_shadow)))
+        fails.append("[4] 重复 %d / 自覆盖 %d" % (len(dup), len(self_shadow)))
 
-    # ---- [5] 与用户规则策略不同的相交（报告，不判失败） ----
-    diff = [(u, s) for u in base for s in sup if intersects(u, s) and u[2] != s[2]]
-    same = [(u, s) for u in base for s in sup if intersects(u, s) and u[2] == s[2]]
+    # ---- [5] 与自定义规则策略不同的相交（报告，不判失败） ----
+    diff = [(u, s) for u in custom for s in supp if intersects(u, s) and u[2] != s[2]]
+    same = [(u, s) for u in custom for s in supp if intersects(u, s) and u[2] == s[2]]
     for u, s in diff:
-        print("    ! 策略不同(用户在前优先生效): 用户 %s || 补充 %s" % (fmt(u), fmt(s)))
-    print("[5] 与用户规则策略不同的相交 ................ %d 处（顺序保证用户优先）" % len(diff))
-    print("    与用户规则策略相同的相交 ................ %d 处（无害）" % len(same))
+        print("    ! 策略不同（自定义在前，优先生效）: 自定义 %s || 补充 %s" % (fmt(u), fmt(s)))
+    print("[5] 与自定义规则策略不同的相交 .............. %d 处（顺序保证自定义优先）" % len(diff))
+    print("    与自定义规则策略相同的相交 .............. %d 处（无害）" % len(same))
 
     # ---- [6] yaml 与 list 一致 ----
-    if os.path.exists(OVER_YAML):
-        ypayload = []
-        with open(OVER_YAML, encoding="utf-8") as f:
-            for raw in f:
-                s = raw.strip()
-                if s in ("payload:",) or not s:
-                    continue
-                if s.startswith("- "):
-                    r = parse_rule(s[2:])
-                    if r:
-                        ypayload.append(r)
-        ok6 = ypayload == over
-        print("[6] overseas.yaml 与 overseas.list 一致 ..... %s (%d 条)" % ("PASS" if ok6 else "FAIL", len(ypayload)))
-        if not ok6:
-            fails.append("[6] yaml/list 不一致")
-    else:
-        ok6 = False
-        print("[6] overseas.yaml 缺失 ..................... FAIL")
-        fails.append("[6] yaml 缺失")
+    ypayload = []
+    with open(yaml_p, encoding="utf-8") as f:
+        for raw in f:
+            s = raw.strip()
+            if s.startswith("- "):
+                r = parse_rule(s[2:])
+                if r:
+                    ypayload.append(r)
+    ok6 = ypayload == merged
+    print("[6] %s.yaml 与 %s.list 一致 ................. %s (%d 条)"
+          % (version, version, "PASS" if ok6 else "FAIL", len(ypayload)))
+    if not ok6:
+        fails.append("[6] yaml/list 不一致")
 
     # ---- 汇总 ----
     print()
-    print("策略组分布（全部 %d 条）:" % len(over))
-    for pol, n in Counter(p for _, _, p in over).most_common():
+    print("策略组分布（全部 %d 条 = 自定义 %d + 补充 %d）:" % (len(merged), len(custom), len(supp)))
+    for pol, n in Counter(p for _, _, p in merged).most_common():
         print("    %-12s %d" % (pol, n))
     print("规则类型分布:")
-    for t, n in Counter(t for t, _, _ in over).most_common():
+    for t, n in Counter(t for t, _, _ in merged).most_common():
         print("    %-16s %d" % (t, n))
+    print()
+    return fails
 
-    if fails:
-        print("\n✗ 校验未通过:")
-        for f in fails:
+
+def main():
+    args = [a for a in sys.argv[1:] if not a.startswith("-")]
+    versions = args if args else VERSIONS
+    all_fails = []
+    for v in versions:
+        all_fails.extend(check(v))
+    if all_fails:
+        print("✗ 校验未通过:")
+        for f in all_fails:
             print("   -", f)
         return 1
-    print("\n✓ 校验全部通过：用户规则未被改动且位于最前，补充规则 0 冲突 / 0 死规则 / 0 重复")
+    print("✓ 全部通过：自定义规则逐字位于最前，补充规则 0 冲突 / 0 死规则 / 0 重复")
     return 0
 
 
