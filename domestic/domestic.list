@@ -1,6 +1,6 @@
 # ==============================================================
 # 国内版 · 域名分流规则（domestic）
-# 自定义规则 185 条位于最前方，优先匹配；补充规则 251 条追加在后。
+# 自定义规则 185 条位于最前方，优先匹配；补充规则 353 条追加在后。
 # Clash/mihomo 自上而下首个命中生效，故自定义规则永远优先。
 # 校验：python3 scripts/check_rules.py
 # ==============================================================
@@ -195,7 +195,7 @@ DOMAIN-SUFFIX,assets-cdn.github.com,🐙 GitHub
 DOMAIN-SUFFIX,github.io,🐙 GitHub
 
 # --------------------------------------------------------------
-# 【第二部分】补充规则（251 条，追加在后）
+# 【第二部分】补充规则（353 条，追加在后）
 # --------------------------------------------------------------
 
 # ---- 国内视频 / 直播 ----
@@ -482,3 +482,117 @@ DOMAIN-SUFFIX,tiktokcdn-eu.com,🎵 TikTok
 DOMAIN-SUFFIX,tiktokcdn-eu.net,🎵 TikTok
 DOMAIN-SUFFIX,tiktokcdn-deu.com,🎵 TikTok
 DOMAIN-SUFFIX,musical.ly,🎵 TikTok
+
+# ---- 云 / CDN / 工具（权威域名集补充 · 🚀 默认代理） ----
+DOMAIN-SUFFIX,ai.azure.com,🚀 默认代理
+DOMAIN-SUFFIX,akamai.net,🚀 默认代理
+DOMAIN-SUFFIX,akamaihd.net,🚀 默认代理
+DOMAIN-SUFFIX,akamaistream.net,🚀 默认代理
+DOMAIN-SUFFIX,akamaized.net,🚀 默认代理
+DOMAIN-SUFFIX,azure.com,🚀 默认代理
+DOMAIN-SUFFIX,azureedge.net,🚀 默认代理
+DOMAIN-SUFFIX,azurewebsites.net,🚀 默认代理
+DOMAIN-SUFFIX,cloudflare-cn.com,🚀 默认代理
+DOMAIN-SUFFIX,cloudflare-dns.com,🚀 默认代理
+DOMAIN-SUFFIX,cloudflare-ipfs.com,🚀 默认代理
+DOMAIN-SUFFIX,cloudflarecn.net,🚀 默认代理
+DOMAIN-SUFFIX,cloudflareinsights-cn.com,🚀 默认代理
+DOMAIN-SUFFIX,cloudflareprod.com,🚀 默认代理
+DOMAIN-SUFFIX,cloudflarestatus.com,🚀 默认代理
+DOMAIN-SUFFIX,cloudfront-cn.net,🚀 默认代理
+DOMAIN-SUFFIX,cloudfront.net,🚀 默认代理
+DOMAIN-SUFFIX,fastly.net,🚀 默认代理
+DOMAIN-SUFFIX,herokuapp.com,🚀 默认代理
+DOMAIN-SUFFIX,linode.com,🚀 默认代理
+DOMAIN-SUFFIX,netlify.app,🚀 默认代理
+DOMAIN-SUFFIX,oraclecloud.com,🚀 默认代理
+DOMAIN-SUFFIX,vercel.app,🚀 默认代理
+DOMAIN-SUFFIX,vultr.com,🚀 默认代理
+
+# ---- AI / 开发（权威域名集补充 · 🗽 美国自动 / 🐙 GitHub / 🤖 ChatGPT） ----
+DOMAIN-SUFFIX,anthropic.com,🤖 ChatGPT
+DOMAIN-SUFFIX,api.githubcopilot.com,🐙 GitHub
+DOMAIN-SUFFIX,copilot.cloud.microsoft,🗽 美国自动
+DOMAIN-SUFFIX,dockerhub.com,🗽 美国自动
+DOMAIN-SUFFIX,gitlab.com,🐙 GitHub
+DOMAIN-SUFFIX,gitlab.io,🐙 GitHub
+DOMAIN-SUFFIX,gitlab.net,🐙 GitHub
+DOMAIN-SUFFIX,grokipedia.com,🗽 美国自动
+DOMAIN-SUFFIX,jetbrains.ai,🗽 美国自动
+DOMAIN-SUFFIX,openart.ai,🗽 美国自动
+DOMAIN-SUFFIX,pythonhosted.org,🗽 美国自动
+
+# ---- 元数据 / 刮削（权威域名集补充 · 🗽 美国自动） ----
+DOMAIN-SUFFIX,bangumi.tv,🗽 美国自动
+
+# ---- 媒体 / 流媒体（权威域名集补充 · 🚀 默认代理） ----
+DOMAIN-SUFFIX,applemusic.com,🚀 默认代理
+DOMAIN-SUFFIX,bamgrid.com,🚀 默认代理
+DOMAIN-SUFFIX,bbc.co.uk,🚀 默认代理
+DOMAIN-SUFFIX,bbc.com,🚀 默认代理
+DOMAIN-SUFFIX,bbc.in,🚀 默认代理
+DOMAIN-SUFFIX,bbci.co.uk,🚀 默认代理
+DOMAIN-SUFFIX,cbs.com,🚀 默认代理
+DOMAIN-SUFFIX,cbsnews.com,🚀 默认代理
+DOMAIN-SUFFIX,channel4.com,🚀 默认代理
+DOMAIN-SUFFIX,channel5.com,🚀 默认代理
+DOMAIN-SUFFIX,crackle.com,🚀 默认代理
+DOMAIN-SUFFIX,crunchyroll.com,🚀 默认代理
+DOMAIN-SUFFIX,deezer.com,🦁 狮城自动
+DOMAIN-SUFFIX,disney-plus.net,🚀 默认代理
+DOMAIN-SUFFIX,disney.com,🚀 默认代理
+DOMAIN-SUFFIX,disneyplus.com,🚀 默认代理
+DOMAIN-SUFFIX,dssott.com,🚀 默认代理
+DOMAIN-SUFFIX,espn.com,🚀 默认代理
+DOMAIN-SUFFIX,espncdn.com,🚀 默认代理
+DOMAIN-SUFFIX,hbo.com,🚀 默认代理
+DOMAIN-SUFFIX,itv.com,🚀 默认代理
+DOMAIN-SUFFIX,kkbox.com,🚀 默认代理
+DOMAIN-SUFFIX,nicoseiga.jp,🚀 默认代理
+DOMAIN-SUFFIX,pandora.com,🚀 默认代理
+DOMAIN-SUFFIX,pluto.tv,🚀 默认代理
+DOMAIN-SUFFIX,tidal.com,🚀 默认代理
+DOMAIN-SUFFIX,vimeo.com,🚀 默认代理
+DOMAIN-SUFFIX,vimeocdn.com,🚀 默认代理
+DOMAIN-SUFFIX,viu.com,🚀 默认代理
+DOMAIN-SUFFIX,viu.tv,🚀 默认代理
+
+# ---- AV / 日本（权威域名集补充 · 🗼 日本自动） ----
+DOMAIN-SUFFIX,10musume.com,🗼 日本自动
+DOMAIN-SUFFIX,7mmtv.tv,🗼 日本自动
+DOMAIN-SUFFIX,av-e-body.com,🗼 日本自动
+DOMAIN-SUFFIX,avmoo.net,🗼 日本自动
+DOMAIN-SUFFIX,avmoo.pw,🗼 日本自动
+DOMAIN-SUFFIX,bangumi.moe,🗼 日本自动
+DOMAIN-SUFFIX,chinaxchina.com,🗼 日本自动
+DOMAIN-SUFFIX,fc2.com,🗼 日本自动
+DOMAIN-SUFFIX,getchu.com,🗼 日本自动
+DOMAIN-SUFFIX,graphis.ne.jp,🗼 日本自动
+DOMAIN-SUFFIX,javmoo.com,🗼 日本自动
+DOMAIN-SUFFIX,javmoo.xyz,🗼 日本自动
+DOMAIN-SUFFIX,jdbusiness.com,🗼 日本自动
+DOMAIN-SUFFIX,madonna-av.com,🗼 日本自动
+DOMAIN-SUFFIX,madou.club,🗼 日本自动
+DOMAIN-SUFFIX,mvg.jp,🗼 日本自动
+DOMAIN-SUFFIX,mywife.cc,🗼 日本自动
+DOMAIN-SUFFIX,pacopacomama.com,🗼 日本自动
+DOMAIN-SUFFIX,pixivsketch.net,🗼 日本自动
+DOMAIN-SUFFIX,qdmm.com,🗼 日本自动
+DOMAIN-SUFFIX,sankakucomplex.com,🗼 日本自动
+DOMAIN-SUFFIX,sod.co.jp,🗼 日本自动
+DOMAIN-SUFFIX,unblockdmm.com,🗼 日本自动
+DOMAIN-SUFFIX,wanz-factory.com,🗼 日本自动
+
+# ---- 社交 / 通讯（权威域名集补充 · 🚀 默认代理 / 🎵 TikTok） ----
+DOMAIN-SUFFIX,byteintl.net,🎵 TikTok
+DOMAIN-SUFFIX,daum.net,🚀 默认代理
+DOMAIN-SUFFIX,discord.co,🚀 默认代理
+DOMAIN-SUFFIX,discordstatus.com,🚀 默认代理
+DOMAIN-SUFFIX,kakao.com,🚀 默认代理
+DOMAIN-SUFFIX,kakaocdn.net,🚀 默认代理
+DOMAIN-SUFFIX,kakaocorp.com,🚀 默认代理
+DOMAIN-SUFFIX,line.me,🚀 默认代理
+DOMAIN-SUFFIX,linkedin.com,🚀 默认代理
+DOMAIN-SUFFIX,pinterest.com,🚀 默认代理
+DOMAIN-SUFFIX,tumblr.com,🚀 默认代理
+DOMAIN-SUFFIX,vk.com,🚀 默认代理

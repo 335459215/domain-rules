@@ -6,7 +6,7 @@
 
 | 版本 | 订阅文件 | 自定义 | 补充 | 合计 |
 |---|---|---|---|---|
-| 国内版 | `domestic/domestic.yaml` | 185 | 251 | 436 |
+| 国内版 | `domestic/domestic.yaml` | 185 | 353 | 538 |
 | 国外版 | `overseas/overseas.yaml` | 185 | 128 | 313 |
 
 ```
@@ -46,13 +46,13 @@ python3 scripts/check_rules.py overseas   # 只检查国外版
 版本：domestic
 ==================================================================
 [1] 自定义规则逐字位于最前 .................. PASS (185 条)
-    补充规则 ................................ 251 条
+    补充规则 ................................ 353 条
 [2] 无被自定义规则完整覆盖的死规则 ......... PASS
 [3] 无补充规则被自定义关键字吞掉 ........... PASS
 [4] 补充规则内部无重复/无自覆盖 ............ PASS
 [5] 与自定义规则策略不同的相交 .............. 0 处（顺序保证自定义优先）
     与自定义规则策略相同的相交 .............. 7 处（无害）
-[6] domestic.yaml 与 domestic.list 一致 .... PASS (436 条)
+[6] domestic.yaml 与 domestic.list 一致 .... PASS (538 条)
 
 ==================================================================
 版本：overseas
@@ -91,9 +91,9 @@ domain-rules/
 ├── README.md                      # 本文件
 ├── domestic/                      # 国内版
 │   ├── custom.list                # 自定义规则权威副本（185 条，纯规则行）
-│   ├── supplement.list            # 国内版补充规则（251 条：国内直连 + 国外分流）
+│   ├── supplement.list            # 国内版补充规则（353 条：国内直连 + 国外分流 + 权威集补充）
 │   ├── domestic.list              # 合并产物（自定义在前 + 补充在后，带注释）
-│   └── domestic.yaml              # 订阅文件（payload 436 条）
+│   └── domestic.yaml              # 订阅文件（payload 538 条）
 ├── overseas/                      # 国外版
 │   ├── custom.list                # 自定义规则权威副本（185 条，与国内版相同）
 │   ├── supplement.list            # 国外版补充规则（128 条，带分节注释）
@@ -146,6 +146,43 @@ rules:
 >
 > 两个 provider 串联时，`domestic` 放前面 → 自定义规则（国内服务直连）先命中，剩下的才轮到 `overseas` 的补充规则。两个文件的第一部分都是同一份自定义规则，重复无害（同一出口）。
 
+### 方式 C：想要全量权威规则集时，直接订阅上游
+
+仓库里只收了与你相关的增量（102 条）。如果你想要上游全量（上万条），另开 rule-provider 指向上游即可，注意**必须放在本仓库的 provider 之后**，否则上游的宽规则会抢在你自定义规则之前命中：
+
+```yaml
+rule-providers:
+  # 1) 先匹配本仓库（自定义规则优先）
+  domestic:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/335459215/domain-rules/main/domestic/domestic.yaml"
+    path: ./ruleset/domestic.yaml
+    interval: 86400
+  # 2) 上游全量兜底
+  bm7-china:
+    type: http
+    behavior: domain
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/China/China.list"
+    path: ./ruleset/bm7-china.yaml
+    interval: 86400
+  bm7-proxy:
+    type: http
+    behavior: domain
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Proxy/Proxy.list"
+    path: ./ruleset/bm7-proxy.yaml
+    interval: 86400
+
+rules:
+  - RULE-SET,domestic,MATCH          # 你的规则优先
+  - RULE-SET,bm7-china,直连           # 上游国内集兜底
+  - RULE-SET,bm7-proxy,🚀 默认代理     # 上游国外集兜底
+  - GEOIP,CN,直连
+  - MATCH,🚀 默认代理
+```
+
+上游 `behavior: domain` 即可（它们不需要顺序语义，是集合匹配）。
+
 ### 方式 B：直接粘贴 rules 段
 
 把 `domestic/domestic.list`（或 `overseas/overseas.list`）去掉 `#` 注释行后的内容，粘到配置 `rules:` 的最前面。
@@ -170,7 +207,7 @@ rules:
 - **国内版** 251 条补充 = 国内站点直连（A 块 123 条）+ 国外常用服务分流（B 块 128 条），合成一份在国内用的完整规则
 - **国外版** 128 条补充 = 同一套国外常用服务分流，无国内直连块
 
-### 国内版（251 条，一份在国内用的完整分流规则）
+### 国内版（353 条，一份在国内用的完整分流规则）
 
 分 A / B 两块，**A 块在前**：国内域名先命中直连，剩下的才走国外分流。
 
@@ -188,6 +225,27 @@ rules:
 **B. 国外常用服务 —— 按自定义里已有的策略组分流（128 条）**
 
 见下节。
+
+**C. 权威域名集补充（102 条）**
+
+从社区权威分流规则集拉取、清洗后与你场景相关的增量：
+
+| 来源 | 更新频率 |
+|---|---|
+| [blackmatrix7/ios_rule_script](https://github.com/blackmatrix7/ios_rule_script)（China / Proxy / GlobalMedia / OpenAI / Google） | 每日自动 |
+| [ACL4SSR/ACL4SSR](https://github.com/ACL4SSR/ACL4SSR)（ChinaDomain / ProxyGFWlist） | 不定期 |
+
+拉取时间 2026-09-26。处理方式：提取域名类规则 → 剔除当前规则已覆盖的 → 按白名单筛出与你场景相关的（媒体 / AV / AI / 开发 / 元数据 / 社交 / CDN）→ 统一转 `DOMAIN-SUFFIX`。
+
+| 分节 | 策略组 | 条数 |
+|---|---|---|
+| 云 / CDN / 工具 | 🚀 默认代理 | 24 |
+| 媒体 / 流媒体 | 🚀 默认代理 | 31 |
+| AV / 日本 | 🗼 日本自动 | 24 |
+| AI / 开发 | 🗽 / 🐙 / 🤖 | 11 |
+| 社交 / 通讯 | 🚀 / 🎵 | 12 |
+
+> 这些源全量有上万条（`ChinaMaxNoIP` 单文件 11 万条）。全量导入会让文件难维护、匹配变慢，所以只取与你相关的增量。要全量的话可以改用 `RULE-SET` 直接订阅上游文件，README 第三节有示例。
 
 ### 国外版补充（128 条）
 
