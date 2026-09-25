@@ -6,7 +6,7 @@
 
 | 版本 | 订阅文件 | 自定义 | 补充 | 合计 |
 |---|---|---|---|---|
-| 国内版 | `domestic/domestic.yaml` | 185 | 128 | 313 |
+| 国内版 | `domestic/domestic.yaml` | 185 | 251 | 436 |
 | 国外版 | `overseas/overseas.yaml` | 185 | 128 | 313 |
 
 ```
@@ -46,13 +46,13 @@ python3 scripts/check_rules.py overseas   # 只检查国外版
 版本：domestic
 ==================================================================
 [1] 自定义规则逐字位于最前 .................. PASS (185 条)
-    补充规则 ................................ 128 条
+    补充规则 ................................ 251 条
 [2] 无被自定义规则完整覆盖的死规则 ......... PASS
 [3] 无补充规则被自定义关键字吞掉 ........... PASS
 [4] 补充规则内部无重复/无自覆盖 ............ PASS
 [5] 与自定义规则策略不同的相交 .............. 0 处（顺序保证自定义优先）
-    与自定义规则策略相同的相交 .............. 3 处（无害）
-[6] domestic.yaml 与 domestic.list 一致 .... PASS (313 条)
+    与自定义规则策略相同的相交 .............. 7 处（无害）
+[6] domestic.yaml 与 domestic.list 一致 .... PASS (436 条)
 
 ==================================================================
 版本：overseas
@@ -91,9 +91,9 @@ domain-rules/
 ├── README.md                      # 本文件
 ├── domestic/                      # 国内版
 │   ├── custom.list                # 自定义规则权威副本（185 条，纯规则行）
-│   ├── supplement.list            # 国内版补充规则（128 条，带分节注释）
+│   ├── supplement.list            # 国内版补充规则（251 条：国内直连 + 国外分流）
 │   ├── domestic.list              # 合并产物（自定义在前 + 补充在后，带注释）
-│   └── domestic.yaml              # 订阅文件（payload 313 条）
+│   └── domestic.yaml              # 订阅文件（payload 436 条）
 ├── overseas/                      # 国外版
 │   ├── custom.list                # 自定义规则权威副本（185 条，与国内版相同）
 │   ├── supplement.list            # 国外版补充规则（128 条，带分节注释）
@@ -165,20 +165,33 @@ rules:
 
 ## 四、补充规则说明
 
-两个版本各 128 条补充，**全部挂你已有的 9 个策略组，没有新增组**。
+两个版本都以你的 185 条自定义规则为共同基底，**全部挂你已有的 9 个策略组，没有新增组**。
 
-### 国内版（128 条，全部 `直连`）
+- **国内版** 251 条补充 = 国内站点直连（A 块 123 条）+ 国外常用服务分流（B 块 128 条），合成一份在国内用的完整规则
+- **国外版** 128 条补充 = 同一套国外常用服务分流，无国内直连块
 
-| 分节 | 内容 |
-|---|---|
-| 国内视频 / 直播 | bilibili / bilivideo / hdslb / douyin / ixigua / pstatp / snssdk / amemv / douban / doubanio / youku / iqiyi / mgtv / hunantv / sohu / le / 1905 / cctv / cntv / huya / douyu |
-| 国内音乐 | 163 / 126.net / kuwo / kugou / ximalaya / xmcdn / migu |
-| 国内云 / 更新源 / 镜像 | aliyun / aliyuncs / alicdn / myqcloud / qcloud / huaweicloud / hwclouds / baidubce / bcebos / ustc.edu.cn / tsinghua.edu.cn / npm.elemecdn.com / mirrors.cloud.tencent.com / npmmirror / cnpmjs.org / ubuntu.org.cn / deepin / uniontech / kylinos / openeuler / openkylin |
-| 国内社交 / 工具 / 云盘 | weibo / zhihu / csdn / jianshu / juejin / baidu / bdimg / bdstatic / sinajs / dingtalk / alipay / 189.cn / 10086.cn / 10010.com / quark / uc.cn / ele.me / meituan / dianping / ctrip / 12306 / 360.cn / so.com / sogou / toutiao / bytecdn / bytedance / volccdn / ipip.net / ip.cn / ip138 / ipshudi / hao123 / sm.cn / chinaso / cn.bing.com |
+### 国内版（251 条，一份在国内用的完整分流规则）
+
+分 A / B 两块，**A 块在前**：国内域名先命中直连，剩下的才走国外分流。
+
+**A. 国内站点 / CDN / 更新源 —— 直连（123 条）**
+
+| 分节 | 条数 | 内容 |
+|---|---|---|
+| 国内视频 / 直播 | 38 | bilibili / bilivideo / hdslb / douyin / ixigua / pstatp / snssdk / amemv / douban / doubanio / youku / iqiyi / mgtv / hunantv / sohu / le / 1905 / cctv / cntv / huya / douyu |
+| 国内社交 / 工具 / 生活 | 54 | weibo / zhihu / csdn / jianshu / juejin / baidu / bdimg / bdstatic / sinajs / qqmail / dingtalk / alipay / 189.cn / 10086.cn / 10010.com / quark / uc.cn / ele.me / meituan / dianping / ctrip / 12306 / 360.cn / so.com / sogou / toutiao / bytedance / volccdn / ipip.net / ip.cn / ip138 / ipshudi / hao123 / sm.cn / chinaso / cn.bing.com |
+| 国内云 / 更新源 / 镜像 | 24 | aliyun / aliyuncs / alicdn / myqcloud / qcloud / huaweicloud / hwclouds / baidubce / bcebos / ustc.edu.cn / tsinghua.edu.cn / npm.elemecdn.com / mirrors.cloud.tencent.com / npmmirror / cnpmjs.org / sjtu.edu.cn / nju.edu.cn / ubuntu.org.cn / deepin / uniontech / kylinos / openeuler / openkylin |
+| 国内音乐 | 7 | 126.net / kuwo / kugou / ximalaya / xmcdn / migu |
 
 自定义规则里已有的直连项（自有域名 `131452188.xyz` / `11180215.xyz` / `plex.direct` / `re0.me` / `dian115.com`、`qyapi.weixin.qq.com`、`api.siliconflow.cn`、`frodo.double.com`、`fanyi.baidu.com`、`amazon.cn`）**没有重复添加**。
 
-### 国外版（128 条）
+**B. 国外常用服务 —— 按自定义里已有的策略组分流（128 条）**
+
+见下节。
+
+### 国外版补充（128 条）
+
+国内版 B 块与国外版补充规则内容相同，下表同时说明两者：
 
 | 分节 | 策略组 | 条数 | 内容 |
 |---|---|---|---|

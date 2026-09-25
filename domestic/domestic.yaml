@@ -222,16 +222,13 @@ payload:
   - DOMAIN-SUFFIX,msstatic.com,直连
   - DOMAIN-SUFFIX,douyu.com,直连
   - DOMAIN-SUFFIX,douyucdn.cn,直连
-  - DOMAIN-SUFFIX,163.com,直连
   - DOMAIN-SUFFIX,126.net,直连
   - DOMAIN-SUFFIX,kuwo.cn,直连
   - DOMAIN-SUFFIX,kugou.com,直连
   - DOMAIN-SUFFIX,kugou.net,直连
-  - DOMAIN-SUFFIX,qqqttss.com,直连
   - DOMAIN-SUFFIX,ximalaya.com,直连
   - DOMAIN-SUFFIX,xmcdn.com,直连
   - DOMAIN-SUFFIX,migu.cn,直连
-  - DOMAIN-SUFFIX,1ting.com,直连
   - DOMAIN-SUFFIX,aliyun.com,直连
   - DOMAIN-SUFFIX,aliyuncs.com,直连
   - DOMAIN-SUFFIX,alicdn.com,直连
@@ -296,7 +293,6 @@ payload:
   - DOMAIN-SUFFIX,sogou.com,直连
   - DOMAIN-SUFFIX,sogoucdn.com,直连
   - DOMAIN-SUFFIX,toutiao.com,直连
-  - DOMAIN-SUFFIX,bytecdn.cn,直连
   - DOMAIN-SUFFIX,bytedance.com,直连
   - DOMAIN-SUFFIX,volccdn.com,直连
   - DOMAIN-SUFFIX,byted-static.com,直连
@@ -306,9 +302,136 @@ payload:
   - DOMAIN-SUFFIX,ip.cn,直连
   - DOMAIN-SUFFIX,ip138.com,直连
   - DOMAIN-SUFFIX,ipshudi.com,直连
-  - DOMAIN-SUFFIX,ip-api.com,直连
   - DOMAIN-SUFFIX,hao123.com,直连
   - DOMAIN-SUFFIX,sm.cn,直连
   - DOMAIN-SUFFIX,chinaso.com,直连
   - DOMAIN-SUFFIX,cn.bing.com,直连
   - DOMAIN-SUFFIX,cn.bing.net,直连
+  - DOMAIN-SUFFIX,google.com,🌈 Google
+  - DOMAIN-SUFFIX,googleapis.com,🌈 Google
+  - DOMAIN-SUFFIX,googleusercontent.com,🌈 Google
+  - DOMAIN-SUFFIX,gstatic.com,🌈 Google
+  - DOMAIN-SUFFIX,gvt1.com,🌈 Google
+  - DOMAIN-SUFFIX,gvt2.com,🌈 Google
+  - DOMAIN-SUFFIX,1e100.net,🌈 Google
+  - DOMAIN-SUFFIX,google.dev,🌈 Google
+  - DOMAIN-SUFFIX,goo.gl,🌈 Google
+  - DOMAIN-SUFFIX,youtube.com,🌈 Google
+  - DOMAIN-SUFFIX,youtu.be,🌈 Google
+  - DOMAIN-SUFFIX,ytimg.com,🌈 Google
+  - DOMAIN-SUFFIX,ggpht.com,🌈 Google
+  - DOMAIN-SUFFIX,googlevideo.com,🌈 Google
+  - DOMAIN-SUFFIX,googlesyndication.com,🌈 Google
+  - DOMAIN-SUFFIX,google-analytics.com,🌈 Google
+  - DOMAIN-SUFFIX,googletagmanager.com,🌈 Google
+  - DOMAIN-SUFFIX,deepmind.com,🌈 Google
+  - DOMAIN-SUFFIX,claude.ai,🤖 ChatGPT
+  - DOMAIN-SUFFIX,claude.com,🤖 ChatGPT
+  - DOMAIN-SUFFIX,claudeusercontent.com,🤖 ChatGPT
+  - DOMAIN-SUFFIX,perplexity.ai,🗽 美国自动
+  - DOMAIN-SUFFIX,grok.com,🗽 美国自动
+  - DOMAIN-SUFFIX,x.ai,🗽 美国自动
+  - DOMAIN-SUFFIX,huggingface.co,🗽 美国自动
+  - DOMAIN-SUFFIX,hf.co,🗽 美国自动
+  - DOMAIN-SUFFIX,ollama.com,🗽 美国自动
+  - DOMAIN-SUFFIX,ollama.ai,🗽 美国自动
+  - DOMAIN-SUFFIX,replicate.com,🗽 美国自动
+  - DOMAIN-SUFFIX,stability.ai,🗽 美国自动
+  - DOMAIN-SUFFIX,midjourney.com,🗽 美国自动
+  - DOMAIN-SUFFIX,poe.com,🗽 美国自动
+  - DOMAIN-SUFFIX,character.ai,🗽 美国自动
+  - DOMAIN-SUFFIX,elevenlabs.io,🗽 美国自动
+  - DOMAIN-SUFFIX,civitai.com,🗽 美国自动
+  - DOMAIN,copilot.microsoft.com,🗽 美国自动
+  - DOMAIN-SUFFIX,bing.com,🗽 美国自动
+  - DOMAIN-SUFFIX,jellyfin.org,🗽 美国自动
+  - DOMAIN-SUFFIX,emby.media,🗽 美国自动
+  - DOMAIN-SUFFIX,trakt.tv,🗽 美国自动
+  - DOMAIN-SUFFIX,myanimelist.net,🗽 美国自动
+  - DOMAIN-SUFFIX,anilist.co,🗽 美国自动
+  - DOMAIN-SUFFIX,kitsu.io,🗽 美国自动
+  - DOMAIN-SUFFIX,rottentomatoes.com,🗽 美国自动
+  - DOMAIN-SUFFIX,letterboxd.com,🗽 美国自动
+  - DOMAIN-SUFFIX,metacritic.com,🗽 美国自动
+  - DOMAIN-SUFFIX,subdl.com,🗽 美国自动
+  - DOMAIN-SUFFIX,addic7ed.com,🗽 美国自动
+  - DOMAIN,plex.tv,🗽 美国自动
+  - DOMAIN,www.plex.tv,🗽 美国自动
+  - DOMAIN-SUFFIX,files.pythonhosted.org,🗽 美国自动
+  - DOMAIN-SUFFIX,npmjs.org,🗽 美国自动
+  - DOMAIN-SUFFIX,npmjs.com,🗽 美国自动
+  - DOMAIN-SUFFIX,nodejs.org,🗽 美国自动
+  - DOMAIN-SUFFIX,yarnpkg.com,🗽 美国自动
+  - DOMAIN-SUFFIX,githubassets.com,🐙 GitHub
+  - DOMAIN-SUFFIX,ghcr.io,🐙 GitHub
+  - DOMAIN-SUFFIX,github.dev,🐙 GitHub
+  - DOMAIN-SUFFIX,githubstatus.com,🐙 GitHub
+  - DOMAIN-SUFFIX,docker.com,🚀 默认代理
+  - DOMAIN-SUFFIX,docker.io,🚀 默认代理
+  - DOMAIN-SUFFIX,quay.io,🚀 默认代理
+  - DOMAIN-SUFFIX,gcr.io,🚀 默认代理
+  - DOMAIN-SUFFIX,k8s.io,🚀 默认代理
+  - DOMAIN-SUFFIX,jsdelivr.net,🚀 默认代理
+  - DOMAIN-SUFFIX,cdnjs.com,🚀 默认代理
+  - DOMAIN-SUFFIX,pages.dev,🚀 默认代理
+  - DOMAIN-SUFFIX,workers.dev,🚀 默认代理
+  - DOMAIN-SUFFIX,stackoverflow.com,🚀 默认代理
+  - DOMAIN-SUFFIX,stackexchange.com,🚀 默认代理
+  - DOMAIN-SUFFIX,pixiv.net,🗼 日本自动
+  - DOMAIN-SUFFIX,pximg.net,🗼 日本自动
+  - DOMAIN-SUFFIX,fantia.jp,🗼 日本自动
+  - DOMAIN-SUFFIX,booth.pm,🗼 日本自动
+  - DOMAIN-SUFFIX,toranoana.jp,🗼 日本自动
+  - DOMAIN-SUFFIX,nyaa.si,🗼 日本自动
+  - DOMAIN-SUFFIX,nicovideo.jp,🗼 日本自动
+  - DOMAIN-SUFFIX,nimg.jp,🗼 日本自动
+  - DOMAIN-SUFFIX,bgm.tv,🦁 狮城自动
+  - DOMAIN-SUFFIX,ipinfo.io,🦁 狮城自动
+  - DOMAIN-SUFFIX,linguee.com,🦁 狮城自动
+  - DOMAIN-SUFFIX,dzcdn.net,🦁 狮城自动
+  - DOMAIN-SUFFIX,spotify.com,🚀 默认代理
+  - DOMAIN-SUFFIX,scdn.co,🚀 默认代理
+  - DOMAIN-SUFFIX,pscdn.co,🚀 默认代理
+  - DOMAIN-SUFFIX,last.fm,🚀 默认代理
+  - DOMAIN-SUFFIX,lastfm.freetls.fastly.net,🚀 默认代理
+  - DOMAIN-SUFFIX,discogs.com,🚀 默认代理
+  - DOMAIN-SUFFIX,bandcamp.com,🚀 默认代理
+  - DOMAIN-SUFFIX,bcbits.com,🚀 默认代理
+  - DOMAIN-SUFFIX,soundcloud.com,🚀 默认代理
+  - DOMAIN-SUFFIX,sndcdn.com,🚀 默认代理
+  - DOMAIN-SUFFIX,lrclib.net,🚀 默认代理
+  - DOMAIN-SUFFIX,musixmatch.com,🚀 默认代理
+  - DOMAIN-SUFFIX,navidrome.org,🚀 默认代理
+  - DOMAIN-SUFFIX,netflix.com,🚀 默认代理
+  - DOMAIN-SUFFIX,netflix.net,🚀 默认代理
+  - DOMAIN-SUFFIX,nflxvideo.net,🚀 默认代理
+  - DOMAIN-SUFFIX,nflxso.net,🚀 默认代理
+  - DOMAIN-SUFFIX,nflxext.com,🚀 默认代理
+  - DOMAIN-SUFFIX,nflximg.net,🚀 默认代理
+  - DOMAIN-SUFFIX,hbomax.com,🚀 默认代理
+  - DOMAIN-SUFFIX,max.com,🚀 默认代理
+  - DOMAIN-SUFFIX,hulu.com,🚀 默认代理
+  - DOMAIN-SUFFIX,peacocktv.com,🚀 默认代理
+  - DOMAIN-SUFFIX,paramountplus.com,🚀 默认代理
+  - DOMAIN-SUFFIX,discord.com,🚀 默认代理
+  - DOMAIN-SUFFIX,discordapp.com,🚀 默认代理
+  - DOMAIN-SUFFIX,discord.gg,🚀 默认代理
+  - DOMAIN-SUFFIX,discord.media,🚀 默认代理
+  - DOMAIN-SUFFIX,discordapp.net,🚀 默认代理
+  - DOMAIN-SUFFIX,reddit.com,🚀 默认代理
+  - DOMAIN-SUFFIX,redd.it,🚀 默认代理
+  - DOMAIN-SUFFIX,redditstatic.com,🚀 默认代理
+  - DOMAIN-SUFFIX,redditmedia.com,🚀 默认代理
+  - DOMAIN-SUFFIX,wikipedia.org,🚀 默认代理
+  - DOMAIN-SUFFIX,wikimedia.org,🚀 默认代理
+  - DOMAIN-SUFFIX,imgur.com,🚀 默认代理
+  - DOMAIN-SUFFIX,medium.com,🚀 默认代理
+  - DOMAIN-SUFFIX,telegra.ph,🚀 默认代理
+  - DOMAIN-SUFFIX,telegram.dog,🚀 默认代理
+  - DOMAIN-SUFFIX,telegram-cdn.org,🚀 默认代理
+  - DOMAIN-SUFFIX,telesco.pe,🚀 默认代理
+  - DOMAIN-SUFFIX,fragment.com,🚀 默认代理
+  - DOMAIN-SUFFIX,tiktokcdn-eu.com,🎵 TikTok
+  - DOMAIN-SUFFIX,tiktokcdn-eu.net,🎵 TikTok
+  - DOMAIN-SUFFIX,tiktokcdn-deu.com,🎵 TikTok
+  - DOMAIN-SUFFIX,musical.ly,🎵 TikTok
